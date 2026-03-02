@@ -1,22 +1,48 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
 @import "tailwindcss";
-@theme {
-    --color-primary: #ff0000;
-    --color-secondary: #f54927;
 
-    --container-center: true;
-    --container-padding: 2rem;
-}
-@media (width >= 640px) {
-    /* sm */
-    --container-padding: 2rem;
+/* ====== ESTILOS GLOBALES ====== */
+:root {
+  --color-primary: #ff0000;
+  --color-secondary: #f54927;
 }
 
-@media (width >= 1024px) {
-    /* lg */
-    --container-padding: 4rem;
+/* ====== FONDOS TIPO BOCETO (hero con imagen) ====== */
+.bg-testimonios {
+  background-image: url("/img/testimonios-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-@media (width >= 1280px) {
-    /* xl */
-    --container-padding: 5rem;
+.hero-contacto {
+  background-image: url("/img/contacto-bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Overlay oscuro para que el texto se lea */
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+/* Efecto glass en cards */
+.glass-card {
+  background: rgba(17, 17, 17, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
+}
+
+/* (Opcional) Para que el scroll no se vea raro con navbar fixed */
+html,
+body {
+  height: 100%;
 }

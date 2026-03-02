@@ -1,46 +1,10 @@
-const navbarLinks = [
-    {
-        id: 1,
-        name: "Home",
-        title: "Inicio",
-        url: "/",
-    },
-    {
-        id: 2,
-        name: "About",
-        title: "Acerca de",
-        url: "/about",
-    },
-    {
-        id: 3,
-        name: "Services",
-        title: "Servicios",
-        url: "/services",
-    },
-    {
-        id: 4,
-        name: "Contact",
-        title: "Contacto",
-        url: "/contact",
-    },
-    {
-        id: 5,
-        name: "Schedules",
-        title: "Horarios",
-        url: "/schedules",
-    },
-    {
-        id: 6,
-        name: "Testimonials",
-        title: "Testimonios",
-        url: "/testimonials",
-    },
-    {
-        id: 7,
-        name: "Classes",
-        title: "Clases",
-        url: "/classes",
-    },
+export const navbarLinks = [
+  { id: 1, title: "Inicio", url: "/" },
+  { id: 2, title: "Clases", url: "/classes" },
+  { id: 3, title: "Horarios", url: "/schedules" },
+  { id: 4, title: "Paquetes", url: "/paquetes" },
+  { id: 5, title: "Reto", url: "/reto" },
+  { id: 6, title: "Mi Progreso", url: "/progreso" },
+  { id: 7, title: "Testimonios", url: "/testimonials" },
+  { id: 8, title: "Contacto", url: "/contact" },
 ];
-
-export {navbarLinks};
