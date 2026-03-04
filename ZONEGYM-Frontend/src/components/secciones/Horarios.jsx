@@ -13,6 +13,9 @@ export default function Horarios() {
 
   // Toast simple (demo)
   const [toast, setToast] = useState("");
+  // 🔥 Detectar día actual
+const hoy = new Date().toLocaleDateString("es-MX", { weekday: "long" });
+const hoyCapitalizado = hoy.charAt(0).toUpperCase() + hoy.slice(1);
 
   const horas = useMemo(
     () => ["6:00 - 8:00", "9:00 - 11:00", "6:00 - 8:00 PM", "8:00 - 9:00 PM"],
@@ -130,18 +133,23 @@ export default function Horarios() {
             initial="hidden"
             animate="show"
           >
-            <h1
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontSize: "clamp(30px, 4vw, 44px)",
-                marginBottom: 8,
-                fontWeight: 900,
-                letterSpacing: 0.3,
-              }}
-            >
-              Horarios que sí encajan
-            </h1>
+           <h1
+  style={{
+    textAlign: "center",
+    fontSize: "clamp(30px, 4vw, 44px)",
+    marginBottom: 8,
+    fontWeight: 900,
+    letterSpacing: 0.3,
+    background: "linear-gradient(90deg, #ff7a18, #ff3d00, #ff7a18)",
+    backgroundSize: "200% auto",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    animation: "glowMove 4s linear infinite, pulseGlow 3s ease-in-out infinite",
+    textShadow: "0 0 20px rgba(255, 90, 0, 0.35)",
+  }}
+>
+  Horarios que sí encajan
+</h1>
             <p
               style={{
                 color: "rgba(255,255,255,.80)",
@@ -236,15 +244,26 @@ export default function Horarios() {
                 <tbody>
                   {data.map((row, idx) => (
                     <motion.tr
-                      key={row.dia}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.06 * idx, duration: 0.35 }}
-                      style={{
-                        background:
-                          idx % 2 === 0 ? "rgba(0,0,0,.20)" : "rgba(0,0,0,.10)",
-                      }}
-                    >
+  key={row.dia}
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  whileHover={{
+    y: -4,
+    scale: 1.01,
+    boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+  }}
+  transition={{ delay: 0.06 * idx, duration: 0.35 }}
+  style={{
+    background:
+      row.dia === hoyCapitalizado
+        ? "rgba(255,122,24,.35)"
+        : idx % 2 === 0
+        ? "rgba(0,0,0,.20)"
+        : "rgba(0,0,0,.10)",
+    cursor: "pointer",
+  }}
+>
+                    
                       <td style={tdDia}>{row.dia}</td>
 
                       {horas.map((h) => {
@@ -395,4 +414,22 @@ const toastStyle = {
   backdropFilter: "blur(10px)",
   fontWeight: 800,
   zIndex: 9999,
+  
 };
+
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
+  style.innerHTML = `
+    @keyframes glowMove {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+  `;
+  document.head.appendChild(style);
+}
