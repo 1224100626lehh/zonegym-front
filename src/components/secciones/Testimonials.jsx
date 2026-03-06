@@ -37,6 +37,48 @@ const Testimonials = () => {
       texto: "Yoga y movilidad me ayudaron. Regreso porque me hace bien.",
       tag: "Adulto mayor",
     },
+    {
+      frase: "“Volví a tener energía”",
+      texto:
+        "Antes llegaba cansada del trabajo y no hacía ejercicio. Ahora tengo más energía y hasta duermo mejor.",
+      tag: "Trabajadora",
+    },
+    {
+      frase: "“Bajé de peso sin darme cuenta”",
+      texto:
+        "Empecé viniendo tres días por semana y poco a poco empecé a ver cambios en mi cuerpo y mi salud.",
+      tag: "Estudiante",
+    },
+    {
+      frase: "“Entrenar en pareja sí funciona”",
+      texto:
+        "Mi pareja y yo empezamos juntos y nos motivamos entre nosotros para no faltar al entrenamiento.",
+      tag: "Pareja",
+    },
+    {
+      frase: "“Nunca había sido constante”",
+      texto:
+        "Había intentado hacer ejercicio muchas veces pero siempre lo dejaba. Aquí el ambiente ayuda mucho.",
+      tag: "Principiante",
+    },
+    {
+      frase: "“Las clases hacen la diferencia”",
+      texto:
+        "Las clases grupales son dinámicas y divertidas. Siempre sales con más energía.",
+      tag: "Alumno",
+    },
+    {
+      frase: "“Me ayudó con mi salud”",
+      texto:
+        "Mi doctor me recomendó hacer ejercicio y este gimnasio fue una gran decisión.",
+      tag: "Adulto mayor",
+    },
+    {
+      frase: "“El ambiente motiva”",
+      texto:
+        "La comunidad del gimnasio te anima a seguir entrenando y eso hace que quieras regresar.",
+      tag: "Comunidad",
+    },
   ];
 
   return (
