@@ -1,11 +1,18 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from "framer-motion";
+import Confetti from "react-confetti";
+
 
 export default function MiProgreso() {
   // DEMO: cuando haya backend, estos valores vendrán de API
-  const objetivo = 12;
+  const objetivo = 30;
   const [completados, setCompletados] = useState(8);
+  const [nivel, setNivel] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [racha, setRacha] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [beneficioRenovacion, setBeneficioRenovacion] = useState(false);
 
   const pct = useMemo(() => {
     const p = Math.round((completados / objetivo) * 100);
@@ -13,17 +20,46 @@ export default function MiProgreso() {
   }, [completados, objetivo]);
 
   const faltan = Math.max(0, objetivo - completados);
+  useEffect(() => {
+
+  fetch(`http://localhost:5000/api/progreso/${completados}`)
+    .then(res => res.json())
+    .then(data => {
+      setNivel(data.nivel);
+      setDescripcion(data.descripcion);
+    })
+    .catch(err => console.log(err));
+
+}, [completados]);
+useEffect(() => {
+
+  fetch("http://localhost:5000/api/streak")
+    .then(res => res.json())
+    .then(data => {
+      setRacha(data.streak);
+    });
+
+}, []);
 
   // ✅ Handlers demo (luego los conectas al backend)
   const handleSumarEntrenamiento = async () => {
-    // DEMO: suma 1 y listo
-    setCompletados((prev) => Math.min(objetivo, prev + 1));
 
-    // BACKEND (ejemplo):
-    // await api.post("/progreso/checkin", { date: new Date().toISOString() })
-    // const nuevo = await api.get("/progreso/mes")
-    // setCompletados(nuevo.data.completados)
-  };
+   const nuevoValor = Math.min(objetivo, completados + 1);
+
+  setCompletados(nuevoValor);
+
+  if(nuevoValor === objetivo){
+
+    setShowConfetti(true);
+    setBeneficioRenovacion(true);
+
+    setTimeout(()=>{
+      setShowConfetti(false);
+    },5000);
+
+  }
+
+};
 
   const handleResetDemo = async () => {
     setCompletados(0);
@@ -39,8 +75,29 @@ export default function MiProgreso() {
     // BACKEND:
     // navigate("/horarios") o abrir modal
   };
+  const usarBeneficio = async () => {
+  try {
 
+    const res = await fetch("http://localhost:5000/api/beneficio", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await res.json();
+
+    if(data.ok){
+      alert("🎉 Beneficio de membresía aplicado");
+      setBeneficioRenovacion(false);
+    }
+
+  } catch(error){
+    console.error("Error:", error);
+  }
+};
   return (
+    
     <motion.section
       style={styles.section}
       initial={{ opacity: 0, y: 14, scale: 0.995 }}
@@ -56,7 +113,13 @@ export default function MiProgreso() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.08, duration: 0.45, ease: "easeOut" }}
       >
-        <h1 style={styles.title}>Mi Progreso</h1>
+        <h1 style={styles.title}> Meta en Marcha</h1>
+        <h2 style={styles.level}>
+         {nivel} - {descripcion}
+        </h2>
+        <div style={styles.streak}>
+         🔥 Racha actual: {racha} días
+        </div>
         <p style={styles.subtitle}>
           Ver tu avance te ayuda a no detenerte.{" "}
           <span style={{ opacity: 0.85 }}>
@@ -86,28 +149,52 @@ export default function MiProgreso() {
             Te faltan <b>{faltan}</b> para completar el reto. ¡Estás cerca del
             beneficio de renovación!
           </div>
+          {completados === objetivo && (
+
+           <div style={styles.felicidades}>
+            🎉 Felicidades has completado {objetivo} días consecutivos
+           </div>
+
+           )}
+           {beneficioRenovacion && (
+
+          <div style={styles.beneficio}>
+           💪 Has desbloqueado tu Beneficio de renovación**.
+          </div>
+
+          )}{beneficioRenovacion && (
+
+           <button
+           style={styles.btnRenovar}
+           onClick={usarBeneficio}
+          >
+           Usar beneficio de renovación
+          </button>
+
+        )}
 
           {/* Botones */}
           <div style={styles.actions}>
             <button
               style={styles.btnPrimary}
-              onClick={handleSumarEntrenamiento}
+              onClick={handleSumarEntrenamiento} 
+              
+              
             >
-              +1 entrenamiento (demo)
+              +1 entrenamiento
             </button>
 
             <button style={styles.btnGhost} onClick={handleAgendar}>
-              Agendar 3 días (demo)
+              Agendar 3 días 
             </button>
 
             <button style={styles.btnDanger} onClick={handleResetDemo}>
-              Reiniciar (demo)
+              Reiniciar
             </button>
           </div>
 
           <div style={styles.hint}>
-            * Estos botones ya funcionan en demo. Cuando hagas backend, solo
-            cambias el contenido de las funciones.
+           
           </div>
         </div>
 
@@ -153,6 +240,43 @@ export default function MiProgreso() {
 }
 
 const styles = {
+  beneficio:{
+ marginTop:"20px",
+ fontSize:"20px",
+ fontWeight:"800",
+ color:"#22c55e",
+ textAlign:"center"
+},
+
+btnRenovar:{
+ marginTop:"10px",
+ padding:"12px 18px",
+ borderRadius:"999px",
+ border:"none",
+ background:"#22c55e",
+ color:"#111",
+ fontWeight:"900",
+ cursor:"pointer"
+},
+  felicidades:{
+ marginTop:"15px",
+ fontSize:"22px",
+ fontWeight:"900",
+ color:"#22c55e",
+ textAlign:"center"
+},
+  level: {
+  fontSize: "22px",
+  fontWeight: "800",
+  color: "#f97316",
+  marginBottom: "10px"
+}, streak:{
+ fontSize:"20px",
+ fontWeight:"800",
+ color:"#22c55e",
+ marginBottom:"10px"
+},
+
   section: {
     position: "relative",
     minHeight: "100vh",

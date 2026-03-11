@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from "framer-motion";
+import { FaFire } from "react-icons/fa";
 
 export default function Reto() {
   // ✅ Fondo (sin assets para evitar "Failed to resolve import")
@@ -25,6 +26,8 @@ export default function Reto() {
   const [checkins, setCheckins] = useState([]); // array de "YYYY-MM-DD"
   const [toast, setToast] = useState("");
   const [reglaActiva, setReglaActiva] = useState(false);
+  const [mostrarRetos, setMostrarRetos] = useState(false);
+  const [retosCompletados, setRetosCompletados] = useState([]);
 
   const todayISO = () => {
     const d = new Date();
@@ -39,6 +42,13 @@ export default function Reto() {
     () => checkins.includes(hoy),
     [checkins, hoy],
   );
+  const retosFaciles = [
+  { id: 1, texto: "10 minutos de cardio" },
+  { id: 2, texto: "15 sentadillas" },
+  { id: 3, texto: "20 abdominales" },
+  { id: 4, texto: "Beber 2 litros de agua" },
+  { id: 5, texto: "Entrenar 30 minutos" }
+];
 
   // Cargar del localStorage (una vez por mes)
   useEffect(() => {
@@ -106,11 +116,29 @@ export default function Reto() {
   const onRegla = () => {
     setReglaActiva((v) => !v);
     showToast(
-      !reglaActiva ? "🛡️ Regla activada (demo)" : "🛡️ Regla desactivada (demo)",
+      !reglaActiva ? "🛡️ Regla activada" : "🛡️ Regla desactivada)",
     );
     // Backend futuro:
     // POST /api/reto/regla { active: !reglaActiva, month: monthKey }
   };
+  const completarReto = (id) => {
+
+  if (retosCompletados.includes(id)) {
+    showToast("Este reto ya está completado");
+    return;
+  }
+
+  const nuevos = [...retosCompletados, id];
+  setRetosCompletados(nuevos);
+
+  showToast("🔥 Reto completado");
+
+  // sumar progreso al reto mensual
+  if (completados < OBJETIVO_MES) {
+    setCheckins([...checkins, `reto-${id}-${Date.now()}`]);
+  }
+
+};
 
   // ======= Animaciones =======
   const page = {
@@ -157,6 +185,21 @@ export default function Reto() {
       >
         <div style={{ width: "min(1100px, 92%)", margin: "0 auto" }}>
           {/* Título */}
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0.8 }}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "10px",
+             marginTop: "20px",
+            }}
+          >
+           <FaFire color="orange" size={35} />
+           <span style={{ color: "white", fontSize: "29px" }}>
+            ¡𝐍𝐨 𝐝𝐞𝐣𝐞𝐬 𝐪𝐮𝐞 𝐭𝐮 𝐫𝐚𝐜𝐡𝐚 𝐬𝐞 𝐚𝐩𝐚𝐠𝐞, 𝐜𝐨𝐦𝐨 𝐬𝐞 𝐚𝐩𝐚𝐠𝐨 𝐭𝐮 𝐫𝐞𝐥𝐚𝐜𝐢ó𝐧!
+           </span>
+          </motion.div>
           <motion.div
             variants={card}
             custom={0}
@@ -281,6 +324,87 @@ export default function Reto() {
           </motion.div>
 
           {/* Cards de acciones (como tu diseño) */}
+          {/* Retos rápidos */}
+<motion.div
+  variants={card}
+  custom={5}
+  initial="hidden"
+  animate="show"
+  whileHover={{ y: -4 }}
+  style={cardStyle}
+>
+
+<h3 style={h3}>Retos rápidos</h3>
+
+<p style={p}>
+Completa pequeños retos para sumar progreso.
+</p>
+
+<motion.button
+whileHover={{ scale: 1.03 }}
+whileTap={{ scale: 0.97 }}
+onClick={() => setMostrarRetos(!mostrarRetos)}
+style={btnPrimary}
+>
+
+{mostrarRetos ? "Ocultar retos" : "Ver retos"}
+
+</motion.button>
+
+{mostrarRetos && (
+
+<div style={{marginTop:12}}>
+
+{retosFaciles.map((reto)=>{
+
+const completado = retosCompletados.includes(reto.id);
+
+return(
+
+<div
+key={reto.id}
+style={{
+display:"flex",
+justifyContent:"space-between",
+alignItems:"center",
+marginBottom:8,
+background:"rgba(255,255,255,.05)",
+padding:"8px 10px",
+borderRadius:8
+}}
+>
+
+<span style={{color:"white"}}>{reto.texto}</span>
+
+<button
+onClick={()=>completarReto(reto.id)}
+disabled={completado}
+style={{
+border:"none",
+padding:"6px 12px",
+borderRadius:20,
+background: completado ? "gray" : "#ff3d00",
+color:"white",
+fontWeight:800,
+cursor: completado ? "not-allowed" : "pointer"
+}}
+>
+
+{completado ? "✓" : "Completar"}
+
+</button>
+
+</div>
+
+)
+
+})}
+
+</div>
+
+)}
+
+</motion.div>
           <motion.div
             style={{
               display: "grid",
@@ -299,7 +423,7 @@ export default function Reto() {
             >
               <h3 style={h3}>Check-in</h3>
               <p style={p}>
-                Marca tu asistencia y suma constancia (demo). Máximo 1 check-in
+                Marca tu asistencia y suma constancia. Máximo 1 check-in
                 por día.
               </p>
 
@@ -333,7 +457,7 @@ export default function Reto() {
             >
               <h3 style={h3}>Beneficio</h3>
               <p style={p}>
-                Completa el reto y obtén ventaja al renovar (demo).
+                Completa el reto y obtén ventaja al renovar.
               </p>
 
               <motion.button
@@ -393,8 +517,8 @@ export default function Reto() {
 
               <div style={miniNote}>
                 {reglaActiva
-                  ? "Modo disciplina: activado (demo)"
-                  : "Actívala para reforzar constancia (demo)"}
+                  ? "Modo disciplina: activado"
+                  : "Actívala para reforzar constancia"}
               </div>
             </motion.div>
           </motion.div>
