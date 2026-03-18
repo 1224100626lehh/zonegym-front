@@ -21,7 +21,7 @@ export default function AdminPanel() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(`${API_URL}/api/users`);
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -32,7 +32,7 @@ export default function AdminPanel() {
 
   const changeStatus = async (id, action) => {
     try {
-      const response = await fetch(`${API_URL}/${action}/${id}`, {
+      const response = await fetch(`${API_URL}/api/users${action}/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
