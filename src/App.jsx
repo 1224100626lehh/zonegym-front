@@ -13,6 +13,7 @@ import Login from "./components/secciones/auth/Login.jsx";
 import ReservaForm from "./components/ReservaForm.jsx";
 import AdminPanel from "./components/secciones/admin/AdminPanel.jsx";
 import ProtectedMembershipRoute from "./components/ProtectedMembershipRoute.jsx";
+import ComentariosSeguros from "./components/ComentariosSeguros.jsx";
 
 export default function App() {
   const [retencion, setRetencion] = useState(0);
@@ -28,6 +29,7 @@ export default function App() {
       { label: "Mi Progreso", to: "/progreso" },
       { label: "Testimonios", to: "/testimonials" },
       { label: "Contacto", to: "/contacto" },
+      { label: "Feedback", to: "/comentarios" },
     ],
     [],
   );
@@ -65,6 +67,7 @@ export default function App() {
         <Route path="/contacto" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/comentarios" element={<ComentariosSeguros />} />
 
         <Route
           path="/reto"
