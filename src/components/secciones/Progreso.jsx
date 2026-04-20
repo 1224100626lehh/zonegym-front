@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "react-confetti";
-
+import apiFetch from '../api'
 
 export default function MiProgreso() {
   // DEMO: cuando haya backend, estos valores vendrán de API
@@ -12,7 +12,7 @@ export default function MiProgreso() {
   const [descripcion, setDescripcion] = useState("");
   const [racha, setRacha] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
-  import apiFetch from '../api'
+  
   const [beneficioRenovacion, setBeneficioRenovacion] = useState(false);
 
   const pct = useMemo(() => {
