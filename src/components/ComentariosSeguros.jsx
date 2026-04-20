@@ -1,65 +1,101 @@
-import React, { useState } from 'react';
+import { useState } from 'react'
 
-const ComentariosSeguros = () => {
-  const [input, setInput] = useState('');
-  const [comentarioRecibido, setComentarioRecibido] = useState('');
+function ComentariosSeguros() {
+  const [texto, setTexto] = useState('');
+  const [comentario, setComentario] = useState('');
+  const [modoInseguro, setModoInseguro] = useState(false);
 
-  const enviarAlBackend = async (e) => {
-    e.preventDefault();
-    
-    // Cambia esta URL por la de tu backend en Railway si ya está desplegado
-    // Ej: https://tu-backend-railway.app/api/comentarios
-    const API_URL = "http://localhost:5000/api/comentarios";
+  const enviarComentario = async () => {
+    if (!texto.trim()) return;
 
     try {
-      const response = await fetch(API_URL, {
+      const res = await fetch('http://localhost:5000/api/comentarios', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texto: input })
+        body: JSON.stringify({ texto })
       });
-      const data = await response.json();
-      setComentarioRecibido(data.comentario);
+      const data = await res.json();
+      setComentario(data.comentario);
     } catch (error) {
-      console.error("Error en la conexión:", error);
+      console.error('Error al enviar comentario:', error);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto my-10 p-6 bg-gray-900 text-white rounded-lg shadow-xl border border-orange-500">
-      <h2 className="text-2xl font-bold mb-4 text-orange-500">Feedback ZONEGYM</h2>
-      
-      <form onSubmit={enviarAlBackend} className="space-y-4">
-        <textarea
-          className="w-full p-3 bg-gray-800 border border-gray-700 rounded focus:border-orange-500 focus:outline-none text-white"
-          rows="4"
-          placeholder="Escribe tu comentario sobre el gym..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-        <button 
-          type="submit"
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded transition duration-300"
-        >
-          Enviar Comentario
-        </button>
-      </form>
+    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+      <h2>Sistema de Comentarios Seguro</h2>
+      <p style={{ color: '#666' }}>
+        Prueba escribiendo: <code>&lt;img src=x onerror=alert('XSS')&gt;</code>
+      </p>
 
-      {comentarioRecibido && (
-        <div className="mt-8 p-4 bg-gray-800 rounded border-l-4 border-green-500">
-          <h3 className="text-sm uppercase text-gray-400 mb-2">Comentario procesado por el servidor:</h3>
-          
-          {/* MODO SEGURO (Cumple la especificación del profesor) */}
-          <p className="text-lg">{comentarioRecibido}</p>
+      <textarea
+        rows={4}
+        style={{ width: '100%', padding: '0.5rem', fontSize: '1rem' }}
+        value={texto}
+        onChange={(e) => setTexto(e.target.value)}
+        placeholder="Escribe un comentario..."
+      />
+      <br />
+      <button
+        onClick={enviarComentario}
+        style={{ marginTop: '0.5rem', padding: '0.5rem 1rem' }}
+      >
+        Enviar
+      </button>
 
-          {/* RETO DE SEGURIDAD (Para la demostración)
-              Descomenta la línea de abajo para mostrarle al profesor cómo NO hacerlo.
-              Pruébalo con: <img src=x onerror=alert('XSS')>
-          */}
-          {/* <div dangerouslySetInnerHTML={{ __html: comentarioRecibido }} /> */}
+      {comentario && (
+        <div style={{ marginTop: '1.5rem' }}>
+          <h4>Resultado:</h4>
+
+          {/* MODO SEGURO */}
+          {!modoInseguro && (
+            <div style={{
+              background: '#e8f5e9',
+              border: '1px solid #a5d6a7',
+              padding: '1rem',
+              borderRadius: '6px'
+            }}>
+              <strong>✅ Modo Seguro</strong> — React escapa el HTML automáticamente:
+              <div style={{ marginTop: '0.5rem' }}>{comentario}</div>
+            </div>
+          )}
+
+          {/* MODO INSEGURO — Reto del ejercicio */}
+          {modoInseguro && (
+            <div style={{
+              background: '#ffebee',
+              border: '1px solid #ef9a9a',
+              padding: '1rem',
+              borderRadius: '6px'
+            }}>
+              <strong>⚠️ Modo Inseguro</strong> — dangerouslySetInnerHTML ejecuta el HTML:
+              <div
+                style={{ marginTop: '0.5rem' }}
+                dangerouslySetInnerHTML={{ __html: comentario }}
+              />
+            </div>
+          )}
+
+          <button
+            onClick={() => setModoInseguro(!modoInseguro)}
+            style={{
+              marginTop: '1rem',
+              padding: '0.5rem 1rem',
+              background: modoInseguro ? '#4caf50' : '#f44336',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            {modoInseguro
+              ? '✅ Cambiar a modo SEGURO'
+              : '⚠️ Activar modo INSEGURO'}
+          </button>
         </div>
       )}
     </div>
   );
-};
+}
 
 export default ComentariosSeguros;
