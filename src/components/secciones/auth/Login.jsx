@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Login.css";
-import apiFetch from '../../api'  // ← NUEVO
+import apiFetch from '../../../api'
 
 const Login = () => {
   const navigate = useNavigate();
