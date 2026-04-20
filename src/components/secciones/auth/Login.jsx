@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./Login.css";
+import apiFetch from '../../api'  // ← NUEVO
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,8 +17,6 @@ const Login = () => {
     paymentProof: "",
     messageForAdmin: "",
   });
-
-  const API_URL = "https://zonegym-backend-production.up.railway.app/api/users";
 
   useEffect(() => {
     const mode = searchParams.get("mode");
@@ -80,7 +79,7 @@ const Login = () => {
         };
 
     try {
-      const response = await fetch(`${API_URL}/${endpoint}`, {
+      const response = await apiFetch(`/api/users/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import apiFetch from '../api'
 
 function ComentariosSeguros() {
   const [texto, setTexto] = useState('');
@@ -9,10 +10,9 @@ function ComentariosSeguros() {
     if (!texto.trim()) return;
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/...`, {
+      const res = await apiFetch('/api/comentarios', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ texto })
+        body: JSON.stringify({ texto, puntuacion: 5 })
       });
       const data = await res.json();
       setComentario(data.comentario);
@@ -47,7 +47,6 @@ function ComentariosSeguros() {
         <div style={{ marginTop: '1.5rem' }}>
           <h4>Resultado:</h4>
 
-          {/* MODO SEGURO */}
           {!modoInseguro && (
             <div style={{
               background: '#e8f5e9',
@@ -60,7 +59,6 @@ function ComentariosSeguros() {
             </div>
           )}
 
-          {/* MODO INSEGURO — Reto del ejercicio */}
           {modoInseguro && (
             <div style={{
               background: '#ffebee',

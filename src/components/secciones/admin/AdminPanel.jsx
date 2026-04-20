@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiFetch from '../../api'  // ← NUEVO
 
 const API_URL = "http://localhost:5000";
 
@@ -21,7 +22,7 @@ export default function AdminPanel() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/users`);
+      const response = await apiFetch(`/api/users`);
       const data = await response.json();
       setUsers(data);
     } catch (error) {
