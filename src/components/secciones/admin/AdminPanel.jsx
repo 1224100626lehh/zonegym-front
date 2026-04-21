@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiFetch from '../../api'  // ← NUEVO
+import apiFetch from '../../../api'  // ← NUEVO
 
 const API_URL = "http://localhost:5000";
 
