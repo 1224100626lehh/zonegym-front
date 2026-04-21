@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 // eslint-disable-next-line no-unused-vars
 import { AnimatePresence, motion } from "framer-motion";
 import Confetti from "react-confetti";
-import apiFetch from '../api'
+import apiFetch from '../../api'
 
 export default function MiProgreso() {
   // DEMO: cuando haya backend, estos valores vendrán de API
